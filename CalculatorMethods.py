@@ -15,15 +15,14 @@ def menu(total):
     print("01. Addition\n"
           "02. Subtraction\n"
           "03. Multiplication\n"
-          "04. Division\n"
-          "05. Percent\n"
-          "06. Trig")
-    if total == 0:
-        print("\n\n"
+          "04. Division\n\n"
+          "05. Trig")
+    if not total:
+        print("06. Stats\n\n"
               "07. Create a database\n"
               "08. Graph(data points)\n"
               "09. Graph Coordinate Pairs\n"
-              "10. Stats")
+              "10. Graph Equation")
     else:
         print("\n0. Clear"
               "\nTotal is:", total)
@@ -31,68 +30,30 @@ def menu(total):
     return int_input()
 
 
-def addition(num1, num2):
-    return num1 + num2
-
-
-def subtraction(num1, num2):
-    return num1 - num2
-
-
-def multiplication(num1, num2):
-    return num1 * num2
-
-
-def division(num1, num2):
-    return num1 / num2
-
-
-def percent(num1, num2):
-    return (num1/num2)*100
-
-
-def exp(num, power):
-    """
-    Calculates [number] raised to the [power] power
-    :param num:
-    :param power:
-    :return:
-    """
-    return num ** power
-
-
-def trig(num):
+def trig(num, op):
     """
     Calculates the sin/cos/tan/sec/csc/cot of a number in ***RAD***
     :param num:
+    :param op:
     :return:
     """
-    print("which operation do you want to preform on:", str(num / math.pi) + "*pi?\n",
-          "sin  cos  tan  sec  csc  cot")
-    valid = False
-    while not valid:
-        op = input().lower()
-        if op == 'sin':
-            return math.sin(num)
-        elif op == 'cos':
-            return math.cos(num)
-        elif op == 'tan':
-            return math.tan(num)
-        elif op == 'sec':
-            return 1 / math.cos(num)
-        elif op == 'csc':
-            return 1 / math.sin(num)
-        elif op == 'cot':
-            return 1 / math.tan(num)
-        else:
-            valid = False
-            print('Invalid choice, please try again:\n'
-                  'sin  cos  tan  sec  csc  cot')
+    if op == 1:
+        return math.sin(num)
+    elif op == 2:
+        return math.cos(num)
+    elif op == 3:
+        return math.tan(num)
+    elif op == 4:
+        return 1 / math.cos(num)
+    elif op == 5:
+        return 1 / math.sin(num)
+    elif op == 6:
+        return 1 / math.tan(num)
 
 
 def database(arr):
     """
-    Creates a Pandas Database for use in graphing; akin to stats button
+    Creates a Pandas Database for use in graphing; akin to the stats button on a TI-84 Calculator
     :param arr:
     :return:
     """
@@ -118,13 +79,10 @@ def database(arr):
 
 def stats_onevar(arr):
     avg = mean(arr)
-
     numsum = sum(arr)
-
     numsum2 = 0
     for entry in arr:
         numsum2 += entry**2
-
     sam_std = stdev(arr)
     pop_std = pstdev(arr)
     count = len(arr)
@@ -147,11 +105,12 @@ def tuplegrapher(arr):
     return plt.show()
 
 
-def grapher(db, strng="Not"):
+def grapher(db, strng="Not", grid=False):
     """
     Graphs data based on data from pandas database func
     :param db:
     :param strng:
+    :param grid:
     :return:
     """
     if strng == "Not":
@@ -164,5 +123,5 @@ def grapher(db, strng="Not"):
 
         print('What type of graph?')
         strng = input().lower()
-    db.plot(kind=strng, x='x', y='y', rot=0)
+    db.plot(kind=strng, x='x', y='y', rot=0, grid=grid)
     return plt.show()

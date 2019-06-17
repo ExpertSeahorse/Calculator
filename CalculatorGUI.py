@@ -1,6 +1,7 @@
 import tkinter as tk
-from CalculatorMethods import grapher, database, stats_onevar, tuplegrapher
+from CalculatorMethods import trig, grapher, database, stats_onevar, tuplegrapher
 import math
+from numpy import arange
 
 
 class CalcMenu:
@@ -14,17 +15,21 @@ class CalcMenu:
         button_parts = [("math_button", "Basic Math", lambda: self.router(1), 1, 0, 1),
                         ("trig_button", "Trig", lambda: self.router(2), 1, 1, 1),
                         ("stat_button", "Stats", lambda: self.router(3), 2, 0, 1),
-                        ("man_graph_button", "Manual Graph", lambda:self.router(4), 3, 0, 1),
-                        ("coord_graph_button", "Coord Point Graph", lambda:self.router(5), 3, 1, 1),
+                        ("man_graph_button", "Manual Graph", lambda:self.router(4), 2, 1, 1),
+                        ("coord_graph_button", "Coord Point Graph", lambda:self.router(5), 3, 0, 1),
+                        ("equation_graph_button", "Equation Graph", lambda:self.router(6), 3, 1, 1),
                         ("quit_button", "Quit", master.quit, 4, 0, 2)]
 
         for name, label, comm, row, col, colspan in button_parts:
-            self.name = tk.Button(master, text=label, width=20, command=comm)
+            if colspan == 2:
+                wid = 40
+            else:
+                wid = 20
+            self.name = tk.Button(master, text=label, width=wid, command=comm)
             self.name.grid(row=row, column=col, columnspan=colspan)
 
     def router(self, num):
         self.newWindow = tk.Toplevel(self.master)
-
         if num == 1:
             self.app = FiveFunc(self.newWindow)
         elif num == 2:
@@ -35,6 +40,8 @@ class CalcMenu:
             self.app = ManGraph(self.newWindow)
         elif num == 5:
             self.app = TupGraph(self.newWindow)
+        elif num == 6:
+            self.app = EqGraph(self.newWindow)
 ########################################################################################################################
 
 
@@ -53,7 +60,6 @@ class FiveFunc:
 
 
 class TrigFunc:
-
     def __init__(self, master):
         self.title = tk.Label(master, text="Enter the number in rad/pi").pack()
         # This makes the expression entry field
@@ -78,21 +84,8 @@ class TrigFunc:
         self.res.pack()
 
     def sel(self, op):
-        a = eval(self.e1.get())
-        a = a*math.pi
-        b = 0
-        if op == 1:
-            b = math.sin(a)
-        elif op == 2:
-            b = math.cos(a)
-        elif op == 3:
-            b = math.tan(a)
-        elif op == 4:
-            b = 1 / math.cos(a)
-        elif op == 5:
-            b = 1 / math.sin(a)
-        elif op == 6:
-            b = 1 / math.tan(a)
+        a = eval(self.e1.get())*math.pi
+        b = trig(a, op)
         self.res.config(text=str(b))
 ########################################################################################################################
 
@@ -183,6 +176,41 @@ class TupGraph:
             i += 1
         tuplegrapher(arr)
 ########################################################################################################################
+
+
+class EqGraph:
+    def __init__(self, master):
+        self.input_list = []
+        self.label = tk.Label(master, text="Equation Graphing")
+        self.label.grid(columnspan=2, sticky=tk.N)
+
+        entry_list = [("input", "", "Enter the equation using \"#\" as the x variable", "a"),
+                      ("win_min", "-10", "Enter the min x-value", "b"),
+                      ("win_max", "10", "Enter the max x-value", "c")]
+        row = 1
+        for a, deftxt , labtxt, labname in entry_list:
+            self.labname = tk.Label(master, text=labtxt).grid(row=row)
+            self.a = tk.Entry(master)
+            self.a.bind("<Return>", self.eq_converter)
+            self.a.insert(tk.END, deftxt)
+            self.a.grid(row=row, column=1)
+            self.input_list.append(self.a)
+            row += 1
+
+    def eq_converter(self, event):
+        eq = str(self.input_list[0].get())
+        xvar = '({xvar})'
+        eq = eq.replace('#', xvar)
+        x_arr = []
+        y_arr = []
+        x_min = float(self.input_list[1].get())
+        x_max = float(self.input_list[2].get())
+        foo = x_max/100
+        for xvar in arange(x_min, x_max + foo, .1):
+            yvar = eval(eq.format(xvar=xvar))
+            x_arr.append(xvar)
+            y_arr.append(yvar)
+        grapher(database([x_arr, y_arr]), 'line', True)
 
 
 if __name__ == '__main__':

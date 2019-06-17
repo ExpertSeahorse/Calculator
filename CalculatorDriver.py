@@ -1,113 +1,183 @@
 from CalculatorMethods import *
 from InputMethods import *
+from numpy import arange
+# math is used when using eval to run equations
+from math import *
 
-total = 0
-looper = True
-while looper:
+
+def router(choice, total):
     print("\n" * 50)
-    choice = menu(total)
-    print("\n" * 50)
+    if 1 <= choice <= 4:
+        statement, total = basicmath_driver(choice, total)
+        print(statement)
 
-# ADD/SUB/MULT/DIV/PER ####################################
-    if 1 <= choice <= 5:
-        if not total:
-            print("Enter the first number:")
-            num1 = float_input()
-        else:
-            num1 = total
-            print("The previous total is", num1)
-        print("Enter the next number:")
-        num2 = float_input()
-        if choice == 1:
-            total = addition(num1, num2)
-        elif choice == 2:
-            total = subtraction(num1, num2)
-        elif choice == 3:
-            total = multiplication(num1, num2)
-        elif choice == 4:
-            total = division(num1, num2)
-        elif choice == 5:
-            total = percent(num1, num2)
-        print("The total is:", total)
+    elif choice == 5:
+        statement, total = trig_driver(total)
+        print(statement)
 
-# TRIG ####################################################
     elif choice == 6:
-        if not total:
-            print("Enter the number in radians as a decimal (without the pi):")
-            num = float_input()
-        else:
-            num = total
-        total = trig(num * math.pi)
-        print("The total is:", total)
+        stat_driver()
 
-# DATABASE ################################################
     elif choice == 7:
-        print("How many columns?")
-        cols = int_input()
-        print("How many rows?")
-        rows = int_input()
-        full_arr = []
-        for col_num in range(1, 1 + cols):
-            part_arr = []
-            for row_num in range(1, 1 + rows):
-                print("Enter the number for",str(col_num) + "," + str(row_num) + ":")
-                part_arr.append(float_input())
-            full_arr.append(part_arr)
-        print(database(full_arr))
+        db_driver()
 
-# GRAPH (Manual) ############################################
     elif choice == 8:
-        print("How many columns?")
-        cols = int_input()
-        print("How many rows?")
-        rows = int_input()
-        full_arr = []
-        for col_num in range(1, 1 + cols):
-            part_arr = []
-            for row_num in range(1, 1 + rows):
-                print("Enter the number for", str(col_num) + "," + str(row_num) + ":")
-                part_arr.append(float_input())
-            full_arr.append(part_arr)
-        print(database(full_arr))
-        grapher(database(full_arr))
+        man_graph_driver()
 
-# GRAPH(COORDINATE POINTS) ################################
     elif choice == 9:
-        print("How many coord points?")
-        count = int_input()
-        full_arr = []
-        for i in range(count):
-            print("Enter a point (x , y):")
-            str_coord_point = input()
-            a = tuple(map(float, str_coord_point.strip().split(",")))
-            full_arr.append(a)
+        tup_graph_driver()
 
-        tuplegrapher(full_arr)
-
-# 1-VAR-STATS #############################################
     elif choice == 10:
-        print("How many entries of data?")
-        rows = int_input()
-        full_arr = []
-        for row_num in range(rows):
-            print("Enter a number:")
-            full_arr.append(float_input())
-        avg, numsum, numsum2, sam_std, pop_std, count, minimum, med, maximum = stats_onevar(full_arr)
-        print("The average:", avg, "\n",
-              "The sum:", numsum, "\n",
-              "The sum of num**2:", numsum2, "\n",
-              "The sample standard deviation:", sam_std, "\n",
-              "The population standard deviation:", pop_std, "\n",
-              "The n:", count, "\n",
-              "The minimum:", minimum, "\n",
-              "The median:", med, "\n",
-              "The maximum:", maximum)
+        eq_graph_driver()
 
-# CLEAR ###################################################
     elif not choice:
-        total = 0
         print("The total was reset")
+        total = 0
 
-# LOOPER ##################################################
-    print("Enter (0) to quit")
-    looper = bool(int_input())
+    if total:
+        return total
+
+
+def basicmath_driver(choice, total):
+    if not total:
+        print("Enter the first number:")
+        num1 = float_input()
+    else:
+        num1 = total
+        print("The previous total is", num1)
+    print("Enter the next number:")
+    num2 = float_input()
+    if choice == 1:
+        total = eval(str(num1) + "+" + str(num2))
+    elif choice == 2:
+        total = eval(str(num1) + "-" + str(num2))
+    elif choice == 3:
+        total = eval(str(num1) + "*" + str(num2))
+    elif choice == 4:
+        total = eval(str(num1) + "/" + str(num2))
+    return "The total is: " + str(total), total
+
+
+def trig_driver(total):
+    if not total:
+        print("Enter the number in radians as a decimal (without the pi):")
+        num = float_input()
+    else:
+        print("Is the number in radians yet?")
+        rad_tru = input().lower()
+        if rad_tru[0] == 'y':
+            num = total
+        elif rad_tru[0] == 'n':
+            num = (total / 180) * math.pi
+    print("which operation do you want to preform on:", str(num) + "?\n",
+          "1. sin\n 2. cos\n 3. tan\n 4. sec\n 5. csc\n 6. cot")
+    op = int_input()
+    while op not in range(1, 7):
+        print("Please enter a value between 1 - 6")
+        op = int_input()
+    total = trig(num * math.pi, op)
+    return "The total is: " + str(total), total
+
+
+def db_driver():
+    print("How many columns?")
+    cols = int_input()
+    print("How many rows?")
+    rows = int_input()
+    full_arr = []
+    for col_num in range(1, 1 + cols):
+        part_arr = []
+        for row_num in range(1, 1 + rows):
+            print("Enter the number for", str(col_num) + "," + str(row_num) + ":")
+            part_arr.append(float_input())
+        full_arr.append(part_arr)
+    print(database(full_arr))
+
+
+def man_graph_driver():
+    print("How many columns?")
+    cols = int_input()
+    print("How many rows?")
+    rows = int_input()
+    full_arr = []
+    for col_num in range(1, 1 + cols):
+        part_arr = []
+        for row_num in range(1, 1 + rows):
+            print("Enter the number for", str(col_num) + "," + str(row_num) + ":")
+            part_arr.append(float_input())
+        full_arr.append(part_arr)
+    print(database(full_arr))
+    grapher(database(full_arr))
+
+
+def tup_graph_driver():
+    print("How many coord points?")
+    count = int_input()
+    full_arr = []
+    for i in range(count):
+        print("Enter a point (x , y):")
+        str_coord_point = input()
+        a = tuple(map(float, str_coord_point.strip().split(",")))
+        full_arr.append(a)
+
+    tuplegrapher(full_arr)
+
+
+def stat_driver():
+    print("How many entries of data?")
+    rows = int_input()
+    full_arr = []
+    for row_num in range(rows):
+        print("Enter a number:")
+        full_arr.append(float_input())
+    avg, numsum, numsum2, sam_std, pop_std, count, minimum, med, maximum = stats_onevar(full_arr)
+    print("The average:", avg, "\n",
+          "The sum:", numsum, "\n",
+          "The sum of num**2:", numsum2, "\n",
+          "The sample standard deviation:", sam_std, "\n",
+          "The population standard deviation:", pop_std, "\n",
+          "The n:", count, "\n",
+          "The minimum:", minimum, "\n",
+          "The median:", med, "\n",
+          "The maximum:", maximum)
+
+
+def eq_graph_driver():
+    print("Acceptable functions:\n\n"
+          "sin(x)\tx**z\n"
+          "cos(x)\tsqrt(x)\n"
+          "tan(x)\tlog(x)\n"
+          "***The calculator requires notation such as:\n"
+          "...##*x...##*(x)...")
+    print()
+    print("Enter the equation")
+    eq = str(input()).lower()
+    x = '({x})'
+    eq = eq.replace('x', x)
+    # eq = eq.replace('sin(x)', sin(xvar))
+
+    print("Enter the minimum x-value")
+    x_min = float_input()
+    print("Enter the maximum x-value")
+    x_max = float_input()
+
+    x_arr = []
+    y_arr = []
+    offset = x_max / 100
+    for xvar in arange(x_min, x_max + offset, offset):
+        yvar = eval(eq.format(x=xvar))
+        x_arr.append(xvar)
+        y_arr.append(yvar)
+
+    grapher(database([x_arr, y_arr]), 'line', True)
+
+
+if __name__ == '__main__':
+    total = 0
+    looper = True
+    while looper:
+        print("\n" * 50)
+        total = router(menu(total), total)
+
+        print("Enter (0) to quit, or any other key to continue")
+        looper = bool(int_input())
