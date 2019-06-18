@@ -1,5 +1,5 @@
 import tkinter as tk
-from CalculatorMethods import trig, grapher, database, stats_onevar, tuplegrapher, equation_processor
+from CalculatorMethods import *
 import math
 
 

@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import math
 from InputMethods import *
 from numpy import arange
+import re
 
 
 def menu(total):
@@ -139,12 +140,21 @@ def equation_processor(eq_string: str, xmin: float, xmax: float):
     :return:
     """
     eq = eq_string.lower().replace('x', '({x})').replace('t', '({x})')
-
+    print(eq)
+    err_list = [re.compile(r'\dx'), re.compile(r'\d\('), re.compile(r'\)\d')]
+    for i in range(len(eq)-1):
+        eqw = eq[i] + eq[i+1]
+        if err_list[0].match(eqw) or err_list[1].match(eqw) or err_list[2].match(eqw):
+            eq = eq[:i] + "*" + eq[i:]
+    print(eq)
     x_arr = []
     y_arr = []
     d = abs(xmax / 1000)
     for xvar in arange(xmin, xmax + d, d):
-        yvar = eval(eq.format(x=xvar))
+        try:
+            yvar = eval(eq.format(x=xvar))
+        except TypeError:
+            print("No operator between characters")
         x_arr.append(xvar)
         y_arr.append(yvar)
 
