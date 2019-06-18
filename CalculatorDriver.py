@@ -144,32 +144,19 @@ def stat_driver():
 
 def eq_graph_driver():
     print("Acceptable functions:\n\n"
-          "sin(x)\tx**z\n"
-          "cos(x)\tsqrt(x)\n"
-          "tan(x)\tlog(x)\n"
+          "sin(x)\tt**z\n"
+          "cos(t)\tsqrt(x)\n"
+          "tan(x)\tlog(t)\n"
           "***The calculator requires notation such as:\n"
-          "...##*x...##*(x)...")
-    print()
+          "...##*x...##*(t)...\n")
     print("Enter the equation")
-    eq = str(input()).lower()
-    x = '({x})'
-    eq = eq.replace('x', x)
-    # eq = eq.replace('sin(x)', sin(xvar))
-
+    eq = str(input())
     print("Enter the minimum x-value")
     x_min = float_input()
     print("Enter the maximum x-value")
     x_max = float_input()
 
-    x_arr = []
-    y_arr = []
-    offset = x_max / 100
-    for xvar in arange(x_min, x_max + offset, offset):
-        yvar = eval(eq.format(x=xvar))
-        x_arr.append(xvar)
-        y_arr.append(yvar)
-
-    grapher(database([x_arr, y_arr]), 'line', True)
+    equation_processor(eq, x_min, x_max)
 
 
 if __name__ == '__main__':
@@ -178,6 +165,5 @@ if __name__ == '__main__':
     while looper:
         print("\n" * 50)
         total = router(menu(total), total)
-
         print("Enter (0) to quit, or any other key to continue")
         looper = bool(int_input())

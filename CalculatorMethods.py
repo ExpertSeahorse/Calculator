@@ -3,6 +3,7 @@ import pandas
 import matplotlib.pyplot as plt
 import math
 from InputMethods import *
+from numpy import arange
 
 
 def menu(total):
@@ -105,12 +106,14 @@ def tuplegrapher(arr):
     return plt.show()
 
 
-def grapher(db, strng="Not", grid=False):
+def grapher(db, strng="Not", grid=False, xstep=None, ystep=None):
     """
     Graphs data based on data from pandas database func
     :param db:
     :param strng:
     :param grid:
+    :param xstep:
+    :param ystep:
     :return:
     """
     if strng == "Not":
@@ -123,5 +126,26 @@ def grapher(db, strng="Not", grid=False):
 
         print('What type of graph?')
         strng = input().lower()
-    db.plot(kind=strng, x='x', y='y', rot=0, grid=grid)
+    db.plot(kind=strng, x='x', y='y', rot=0, grid=grid, xticks=xstep, yticks=ystep)
     return plt.show()
+
+
+def equation_processor(eq_string: str, xmin: float, xmax: float):
+    """
+    Receives a string of a linear equation in the format y="Equation" with x or t as the dependent variable
+    :param eq_string:
+    :param xmax: @type: float
+    :param xmin:
+    :return:
+    """
+    eq = eq_string.lower().replace('x', '({x})').replace('t', '({x})')
+
+    x_arr = []
+    y_arr = []
+    d = abs(xmax / 1000)
+    for xvar in arange(xmin, xmax + d, d):
+        yvar = eval(eq.format(x=xvar))
+        x_arr.append(xvar)
+        y_arr.append(yvar)
+
+    grapher(db=database([x_arr, y_arr]), strng='line', grid=True, xstep=range(int(xmin), int(xmax)))

@@ -1,7 +1,6 @@
 import tkinter as tk
-from CalculatorMethods import trig, grapher, database, stats_onevar, tuplegrapher
+from CalculatorMethods import trig, grapher, database, stats_onevar, tuplegrapher, equation_processor
 import math
-from numpy import arange
 
 
 class CalcMenu:
@@ -169,11 +168,9 @@ class TupGraph:
 
     def db_converter(self, event):
         arr = str(self.input_list[0].get()).strip().split(';')
-        i=0
-        for entry in arr:
+        for i, entry in enumerate(arr):
             newentry = tuple(map(float, entry.strip().split(",")))
             arr[i] = newentry
-            i += 1
         tuplegrapher(arr)
 ########################################################################################################################
 
@@ -184,7 +181,7 @@ class EqGraph:
         self.label = tk.Label(master, text="Equation Graphing")
         self.label.grid(columnspan=2, sticky=tk.N)
 
-        entry_list = [("input", "", "Enter the equation using \"#\" as the x variable", "a"),
+        entry_list = [("input", "", "Enter the equation", "a"),
                       ("win_min", "-10", "Enter the min x-value", "b"),
                       ("win_max", "10", "Enter the max x-value", "c")]
         row = 1
@@ -199,18 +196,9 @@ class EqGraph:
 
     def eq_converter(self, event):
         eq = str(self.input_list[0].get())
-        xvar = '({xvar})'
-        eq = eq.replace('#', xvar)
-        x_arr = []
-        y_arr = []
         x_min = float(self.input_list[1].get())
         x_max = float(self.input_list[2].get())
-        foo = x_max/100
-        for xvar in arange(x_min, x_max + foo, .1):
-            yvar = eval(eq.format(xvar=xvar))
-            x_arr.append(xvar)
-            y_arr.append(yvar)
-        grapher(database([x_arr, y_arr]), 'line', True)
+        equation_processor(eq, x_min, x_max)
 
 
 if __name__ == '__main__':
