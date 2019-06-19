@@ -178,7 +178,9 @@ class TupGraph:
 
 class EqGraph:
     def __init__(self, master):
+        # Initializes entry list
         self.input_list = []
+        # Creates Grid and title for window
         self.label = tk.Label(master, text="Equation Graphing")
         self.label.grid(columnspan=2, sticky=tk.N)
 
@@ -187,6 +189,7 @@ class EqGraph:
                       ("win_max", "10", "Enter the max x-value", "c"),
                       ("x_step", "1", "Enter the x-step", "d")]
         row = 1
+        # Creates Entry feilds and their Labels based on list above
         for a, deftxt , labtxt, labname in entry_list:
             self.labname = tk.Label(master, text=labtxt).grid(row=row)
             self.a = tk.Entry(master)
@@ -195,6 +198,7 @@ class EqGraph:
             self.a.grid(row=row, column=1)
             self.input_list.append(self.a)
             row += 1
+        # Error message label
         self.res = tk.Label(master)
         self.res.grid(row=row+1, columnspan=2)
 
