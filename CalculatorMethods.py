@@ -156,7 +156,7 @@ def equation_processor(eq: str, xmin: str, xmax: str, xstep: str):
         str(xstep)
 
     input_group = [eq.lower(), xmin, xmax, xstep]
-    err_list = [re.compile(r'\d\('), re.compile(r'\)\d'), re.compile(r'\d[a-z]'), re.compile(r'[a-z]\d')]
+    err_code = re.compile(r' \w\(|\)\w|\w[a-z]|[a-z]\d')
     new_arr = []
     # for each of the passed parameters...
     for entry in input_group:
@@ -169,15 +169,11 @@ def equation_processor(eq: str, xmin: str, xmax: str, xstep: str):
         for i in range(len(entry)-1):
             # if between two characters...
             eqw = entry[i] + entry[i+1]
-            cont = False
             # there is one of the errors listed in the err_list...
-            for j in range(len(err_list)):
-                if err_list[j].match(eqw):
-                    # Add a multiplication symbol to fix the offence
-                    entry = entry[:i+1] + "*" + entry[i+1:]
-                    cont = True
-                if cont:
-                    break
+            if err_code.match(eqw):
+                # Add a multiplication symbol to fix the offence
+                entry = entry[:i+1] + "*" + entry[i+1:]
+
         # And add the amended entry to this new list
         new_arr.append(entry)
 
