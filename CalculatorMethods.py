@@ -53,28 +53,33 @@ def trig(num, op):
         return 1 / tan(num)
 
 
-def database(arr):
+def database(arr, titles=False):
     """
     Creates a Pandas Database for use in graphing; akin to the stats button on a TI-84 Calculator
     :param arr:
+    :param titles:
     :return:
     """
-    if isinstance(arr[0], list) or isinstance(arr[0], tuple):
-        if len(arr) == 2:
-            indx = ["x", "y"]
-        elif len(arr) == 3:
-            indx = ["x", "y", "z"]
+    if not titles:
+        if isinstance(arr[0], list) or isinstance(arr[0], tuple):
+            if len(arr) == 2:
+                indx = ["x", "y"]
+            elif len(arr) == 3:
+                indx = ["x", "y", "z"]
+            else:
+                indx = range(1, len(arr) + 1)
+            cols = range(1, len(arr[0])+1)
+
+        elif isinstance(arr[0], float):
+            indx = ["y"]
+            cols = range(1, len(arr)+1)
+
         else:
             indx = range(1, len(arr) + 1)
-        cols = range(1, len(arr[0])+1)
-
-    elif isinstance(arr[0], float):
-        indx = ["y"]
-        cols = range(1, len(arr)+1)
-
+            cols = range(1, len(arr[0])+1)
     else:
-        indx = range(1, len(arr) + 1)
-        cols = range(1, len(arr[0])+1)
+        indx = titles
+        cols = range(1, len(arr[0]) + 1)
 
     return pandas.DataFrame(arr, index=indx, columns=cols).T
 
@@ -127,7 +132,9 @@ def grapher(db, strng="Not", grid=False, xstep=None, ystep=None):
 
         print('What type of graph?')
         strng = input().lower()
-    db.plot(kind=strng, x='x', y='y', rot=0, grid=grid, xticks=xstep, yticks=ystep)
+    columns = list(db.columns)
+    # db.plot(kind=strng, x='x', y='y', rot=0, grid=grid, xticks=xstep, yticks=ystep)
+    db.plot(kind=strng, x=columns[0], y=columns[1:], rot=0, grid=grid, xticks=xstep, yticks=ystep)
     return plt.show()
 
 

@@ -8,16 +8,16 @@ class CalcMenu:
         self.master = master
         self.master.title("Calculator GUI")
 
-        self.label = tk.Label(master)
+        self.label = tk.Label(master, text="Choose an operation.")
         self.label.grid(columnspan=2, sticky=tk.W)
 
         button_parts = [("math_button", "Basic Math", lambda: self.router(1), 1, 0, 1),
-                        ("trig_button", "Trig", lambda: self.router(2), 1, 1, 1),
-                        ("stat_button", "Stats", lambda: self.router(3), 2, 0, 1),
-                        ("man_graph_button", "Manual Graph", lambda:self.router(4), 2, 1, 1),
-                        ("coord_graph_button", "Coord Point Graph", lambda:self.router(5), 3, 0, 1),
-                        ("equation_graph_button", "Equation Graph", lambda:self.router(6), 3, 1, 1),
-                        ("quit_button", "Quit", master.quit, 4, 0, 2)]
+                        # ("trig_button", "Trig", lambda: self.router(2), 1, 1, 1),
+                        ("stat_button", "Stats", lambda: self.router(3), 1, 1, 1),
+                        ("man_graph_button", "Manual Graph", lambda:self.router(4), 2, 0, 1),
+                        ("coord_graph_button", "Coord Point Graph", lambda:self.router(5), 2, 1, 1),
+                        ("equation_graph_button", "Equation Graph", lambda:self.router(6), 3, 0, 1),
+                        ("quit_button", "Quit", master.quit, 3, 1, 1)]
 
         for name, label, func, row, col, colspan in button_parts:
             if colspan == 2:
@@ -31,8 +31,8 @@ class CalcMenu:
         self.newWindow = tk.Toplevel(self.master)
         if num == 1:
             self.app = FiveFunc(self.newWindow)
-        elif num == 2:
-            self.app = TrigFunc(self.newWindow)
+        # elif num == 2:
+        #    self.app = TrigFunc(self.newWindow)
         elif num == 3:
             self.app = StatFunc(self.newWindow)
         elif num == 4:
@@ -58,7 +58,11 @@ class FiveFunc:
 ########################################################################################################################
 
 
-class TrigFunc:
+"""class TrigFunc:
+
+    THIS CODE ONLY REMAINS AS DOCUMENTATION FOR HOW TO USE TKINTER RADIOBUTTONS;; IT IS NO LONGER USED
+    
+    
     def __init__(self, master):
         self.title = tk.Label(master, text="Enter the number in rad/pi").pack()
 
@@ -86,7 +90,7 @@ class TrigFunc:
     def sel(self, op):
         a = eval(self.e1.get())*math.pi
         b = trig(a, op)
-        self.res.config(text=str(b))
+        self.res.config(text=str(b))"""
 ########################################################################################################################
 
 
@@ -125,36 +129,63 @@ class StatFunc:
 
 class ManGraph:
     def __init__(self, master):
-        fieldlist = [("xlabel", "Enter the values of the x-axis of the graph separated by commas", "x_entry"),
-                     ("ylabel", "Enter the values of the y-axis of the graph separated by commas", "y_entry"),
-                     ("graph_type", "Enter the type of graph you want", "graph_entry")]
+        self.title = tk.Label(master, text="Manual Graphing Interface")
+        self.title.grid(columnspan=2, sticky=tk.N)
+        fieldlist = [("x_tit_lab", "Enter the title for the x-axis", "x_title"),
+                     ("x_label", "Enter the x-values separated by commas: ", "x_entry"),
+                     ("y_tit_lab", "Enter the title for the y-axis", "y_title"),
+                     ("y_label", "Enter the y-values separated by commas: ", "y_entry"),
+                     ("x_step", 'Enter the tick spacing on the x-axis', "x_step_entry"),
+                     ("y_step", 'Enter the tick spacing on the y-axis', "y_step_entry"),
+                     ("grap_typ", "Enter the type of graph: ", "graph_entry")]
         self.new_list = []
-        for a, b, c in fieldlist:
-            self.a = tk.Label(master, text=b)
-            self.a.pack()
-            self.c = tk.Entry(master)
-            self.c.bind("<Return>", self.db_converter)
-            self.c.pack()
-            self.new_list.append(self.c)
+        r = 1
+        for labname, labtext, entname in fieldlist:
+            self.labname = tk.Label(master, text=labtext)
+            self.labname.grid(row=r, column=0)
+            self.entname = tk.Entry(master, width=30)
+            self.entname.bind("<Return>", self.db_converter)
+            self.entname.grid(row=r, column=1)
+            self.new_list.append(self.entname)
+            r += 1
+
+        # kde and hexbin dont work because I dont know how to use them
         self.options = tk.Label(master, text="line\t: line plot\t\tbar\t: vertical bar plot\n"
                                 "barh\t: horizontal bar plot\thist\t: histogram\n"
                                 "box\t: boxplot\t\t\tkde\t: Kernel Density Estimation plot\n"
                                 "area\t: area plot\t\tpie\t: pie plot\n"                      
                                 "scatter\t: scatter plot\t\thexbin\t: hexbin plot", justify=tk.LEFT)
-        self.options.pack()
+        self.options.grid(row=r, columnspan=2, rowspan=5)
 
     def db_converter(self, event):
         # gets the input out of the entry field, forces it into a string, splits it into a list,
         # then tries to map all of the list entries into a float: If fail, keeps the values as strings
         try:
-            x_values = list(map(float, (str(self.new_list[0].get())).split(',')))
+            x_values = list(map(float, (str(self.new_list[1].get())).split(',')))
         except ValueError:
-            x_values = str(self.new_list[0].get()).split(',')
+            x_values = str(self.new_list[1].get()).split(',')
         try:
-            y_values = list(map(float, (str(self.new_list[1].get())).split(',')))
+            y_values = list(map(float, (str(self.new_list[3].get())).split(',')))
         except ValueError:
             y_values = str(self.new_list[1].get()).split(',')
-        grapher(database([x_values, y_values]), self.new_list[2].get())
+
+        x_title = self.new_list[0].get()
+        y_title = self.new_list[2].get()
+        x_step = self.new_list[4].get()
+        y_step = self.new_list[5].get()
+        kind = self.new_list[6].get()
+        grd = True
+
+        if not x_step:
+            x_step = None
+        if not y_step:
+            y_step = None
+        if not x_step and not y_step:
+            grd = False
+
+        db = database([x_values, y_values], [x_title, y_title])
+        print(db)
+        grapher(db=db, xstep=x_step, ystep=y_step, strng=kind, grid=grd)
 ########################################################################################################################
 
 
@@ -203,6 +234,7 @@ class EqGraph:
         self.res.grid(row=row+1, columnspan=2)
 
     def eq_converter(self, event):
+        # get input
         eq = str(self.input_list[0].get())
         x_min = str(self.input_list[1].get())
         x_max = str(self.input_list[2].get())
