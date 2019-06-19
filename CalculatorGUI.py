@@ -204,6 +204,7 @@ class EqGraph:
         x_max = str(self.input_list[2].get())
         x_step = str(self.input_list[3].get())
 
+        # runs the eq graphing func, but if any errors will return into err var
         err = equation_processor(eq, x_min, x_max, x_step)
         self.res.config(text=err)
 
