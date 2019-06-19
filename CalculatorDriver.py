@@ -1,6 +1,6 @@
 from CalculatorMethods import *
 from InputMethods import *
-# math is used when using eval to run equations
+# is used when using eval to run equations
 from math import *
 
 
@@ -67,14 +67,14 @@ def trig_driver(total):
         if rad_tru[0] == 'y':
             num = total
         elif rad_tru[0] == 'n':
-            num = (total / 180) * math.pi
+            num = (total / 180) * pi
     print("which operation do you want to preform on:", str(num) + "?\n",
           "1. sin\n 2. cos\n 3. tan\n 4. sec\n 5. csc\n 6. cot")
     op = int_input()
     while op not in range(1, 7):
         print("Please enter a value between 1 - 6")
         op = int_input()
-    total = trig(num * math.pi, op)
+    total = trig(num * pi, op)
     return "The total is: " + str(total), total
 
 
@@ -151,11 +151,13 @@ def eq_graph_driver():
     print("Enter the equation")
     eq = str(input())
     print("Enter the minimum x-value")
-    x_min = float_input()
+    x_min = input()
     print("Enter the maximum x-value")
-    x_max = float_input()
+    x_max = input()
+    print("Enter the x-step")
+    x_step = input().lower()
 
-    equation_processor(eq, x_min, x_max)
+    print(equation_processor(eq, x_min, x_max, x_step))
 
 
 if __name__ == '__main__':
