@@ -19,12 +19,12 @@ class CalcMenu:
                         ("equation_graph_button", "Equation Graph", lambda:self.router(6), 3, 1, 1),
                         ("quit_button", "Quit", master.quit, 4, 0, 2)]
 
-        for name, label, comm, row, col, colspan in button_parts:
+        for name, label, func, row, col, colspan in button_parts:
             if colspan == 2:
                 wid = 40
             else:
                 wid = 20
-            self.name = tk.Button(master, text=label, width=wid, command=comm)
+            self.name = tk.Button(master, text=label, width=wid, command=func)
             self.name.grid(row=row, column=col, columnspan=colspan)
 
     def router(self, num):
@@ -61,6 +61,7 @@ class FiveFunc:
 class TrigFunc:
     def __init__(self, master):
         self.title = tk.Label(master, text="Enter the number in rad/pi").pack()
+
         # This makes the expression entry field
         self.e1 = tk.Entry(master)
         self.e1.pack()
@@ -74,11 +75,11 @@ class TrigFunc:
                      ("trigsec", "Sec", 4, lambda: self.sel(var.get())),
                      ("trigcsc", "Csc", 5, lambda: self.sel(var.get())),
                      ("trigcot", "Cot", 6, lambda: self.sel(var.get()))]
-        for name, label, val, comm in radiolist:
-            self.name = tk.Radiobutton(master, text=label, variable=var, value=val, command=comm)
+        for name, label, val, func in radiolist:
+            self.name = tk.Radiobutton(master, text=label, variable=var, value=val, command=func)
             self.name.pack()
 
-        # This is the output line
+        # Output line
         self.res = tk.Label(master)
         self.res.pack()
 
@@ -110,7 +111,7 @@ class StatFunc:
 
         self.res.config(text="The average:" + str(avg) + "\n" +
                              "The sum: " + str(numsum) + "\n" +
-                             "The sum of num**2: " + str(numsum2) + "\n" +
+                             "The sum of num^2: " + str(numsum2) + "\n" +
                              "The sample standard deviation: " + str(sam_std) + "\n" +
                              "The population standard deviation: " + str(pop_std) + "\n" +
                              "The n: " + str(count) + "\n" +
@@ -136,10 +137,10 @@ class ManGraph:
             self.c.pack()
             self.new_list.append(self.c)
         self.options = tk.Label(master, text="line\t: line plot\t\tbar\t: vertical bar plot\n"
-                                     "barh\t: horizontal bar plot\thist\t: histogram\n"
-                                     "box\t: boxplot\t\t\tkde\t: Kernel Density Estimation plot\n"
-                                     "area\t: area plot\t\tpie\t: pie plot\n"                      
-                                     "scatter\t: scatter plot\t\thexbin\t: hexbin plot", justify=tk.LEFT)
+                                "barh\t: horizontal bar plot\thist\t: histogram\n"
+                                "box\t: boxplot\t\t\tkde\t: Kernel Density Estimation plot\n"
+                                "area\t: area plot\t\tpie\t: pie plot\n"                      
+                                "scatter\t: scatter plot\t\thexbin\t: hexbin plot", justify=tk.LEFT)
         self.options.pack()
 
     def db_converter(self, event):
@@ -183,7 +184,8 @@ class EqGraph:
 
         entry_list = [("input", "", "Enter the equation", "a"),
                       ("win_min", "-10", "Enter the min x-value", "b"),
-                      ("win_max", "10", "Enter the max x-value", "c")]
+                      ("win_max", "10", "Enter the max x-value", "c"),
+                      ("x_step", "1", "Enter the x-step", "d")]
         row = 1
         for a, deftxt , labtxt, labname in entry_list:
             self.labname = tk.Label(master, text=labtxt).grid(row=row)
@@ -193,12 +195,17 @@ class EqGraph:
             self.a.grid(row=row, column=1)
             self.input_list.append(self.a)
             row += 1
+        self.res = tk.Label(master)
+        self.res.grid(row=row+1, columnspan=2)
 
     def eq_converter(self, event):
         eq = str(self.input_list[0].get())
-        x_min = float(self.input_list[1].get())
-        x_max = float(self.input_list[2].get())
-        equation_processor(eq, x_min, x_max)
+        x_min = str(self.input_list[1].get())
+        x_max = str(self.input_list[2].get())
+        x_step = str(self.input_list[3].get())
+
+        err = equation_processor(eq, x_min, x_max, x_step)
+        self.res.config(text=err)
 
 
 if __name__ == '__main__':

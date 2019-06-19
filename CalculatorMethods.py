@@ -1,7 +1,7 @@
 from statistics import *
 import pandas
 import matplotlib.pyplot as plt
-import math
+from math import *
 from InputMethods import *
 from numpy import arange
 import re
@@ -40,17 +40,17 @@ def trig(num, op):
     :return:
     """
     if op == 1:
-        return math.sin(num)
+        return sin(num)
     elif op == 2:
-        return math.cos(num)
+        return cos(num)
     elif op == 3:
-        return math.tan(num)
+        return tan(num)
     elif op == 4:
-        return 1 / math.cos(num)
+        return 1 / cos(num)
     elif op == 5:
-        return 1 / math.sin(num)
+        return 1 / sin(num)
     elif op == 6:
-        return 1 / math.tan(num)
+        return 1 / tan(num)
 
 
 def database(arr):
@@ -131,7 +131,7 @@ def grapher(db, strng="Not", grid=False, xstep=None, ystep=None):
     return plt.show()
 
 
-def equation_processor(eq_string: str, xmin: float, xmax: float):
+def equation_processor(eq: str, xmin: str, xmax: str, xstep: str):
     """
     Receives a string of a linear equation in the format y="Equation" with x or t as the dependent variable
     :param eq_string:
@@ -139,23 +139,69 @@ def equation_processor(eq_string: str, xmin: float, xmax: float):
     :param xmin:
     :return:
     """
-    eq = eq_string.lower().replace('x', '({x})').replace('t', '({x})')
-    print(eq)
-    err_list = [re.compile(r'\dx'), re.compile(r'\d\('), re.compile(r'\)\d')]
-    for i in range(len(eq)-1):
-        eqw = eq[i] + eq[i+1]
-        if err_list[0].match(eqw) or err_list[1].match(eqw) or err_list[2].match(eqw):
-            eq = eq[:i] + "*" + eq[i:]
-    print(eq)
+    # Checks if there is variables x and t present
+    if 'x' in eq and 't' in eq:
+        return "Cannot mix x and t variables"
+
+    # Checks if the domain is unusable
+    elif xmin >= xmax:
+        return "Invalid Domain"
+
+    # Checks if xstep is usable
+    try:
+        eval(xstep)
+    except NameError:
+        return "Invalid xstep"
+    finally:
+        str(xstep)
+
+    input_group = [eq.lower(), xmin, xmax, xstep]
+    err_list = [re.compile(r'\d\('), re.compile(r'\)\d'), re.compile(r'\d[a-z]'), re.compile(r'[a-z]\d')]
+    new_arr = []
+    # for each of the passed parameters...
+    for entry in input_group:
+        # ***checks if the entry is only 1 character long
+        if not (len(entry) - 1):
+            new_arr.append(entry)
+            continue
+
+        # check through the entire length of the entry...
+        for i in range(len(entry)-1):
+            # if between two characters...
+            eqw = entry[i] + entry[i+1]
+            cont = False
+            # there is one of the errors listed in the err_list...
+            for j in range(len(err_list)):
+                if err_list[j].match(eqw):
+                    # Add a multiplication symbol to fix the offence
+                    entry = entry[:i+1] + "*" + entry[i+1:]
+                    cont = True
+                if cont:
+                    break
+        # And add the amended entry to this new list
+        new_arr.append(entry)
+
+    # Convert all parameters to a data type the grapher can use
+    eq = new_arr[0].replace('x', '({x})').replace('t', '({x})').replace('^', '**')
+    xmin = float(eval(new_arr[1]))
+    xmax = float(eval(new_arr[2]))
+    xstep = float(eval(new_arr[3]))
+
     x_arr = []
     y_arr = []
     d = abs(xmax / 1000)
-    for xvar in arange(xmin, xmax + d, d):
+    # Generate data points
+    for xvar in arange(xmin, xmax, d):
+        # If there is an error when sifting through the coordinate points, return an error
         try:
             yvar = eval(eq.format(x=xvar))
         except TypeError:
-            print("No operator between characters")
+            return "No operator between characters"
+        except ValueError:
+            return "Invalid Domain"
+        # Add the x and y values to the array's for pandas
         x_arr.append(xvar)
         y_arr.append(yvar)
 
-    grapher(db=database([x_arr, y_arr]), strng='line', grid=True, xstep=range(int(xmin), int(xmax)))
+    xtic = arange(xmin, xmax+xstep, xstep)
+    grapher(db=database([x_arr, y_arr]), strng='line', grid=True, xstep=xtic)

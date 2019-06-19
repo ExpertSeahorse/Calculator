@@ -1,6 +1,5 @@
 from CalculatorMethods import *
 from InputMethods import *
-from numpy import arange
 # math is used when using eval to run equations
 from math import *
 
