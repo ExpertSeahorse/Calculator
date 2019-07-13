@@ -115,13 +115,17 @@ def stats_onevar(arr):
 
 def tuplegrapher(arr):
     """
-    Creates a Pandas Database for use in graphing; accepts tuples for input
+    Creates a Pandas Database for use in graphing; accepts only tuples for input
     :param arr:
     :return:
     """
+    # Sets the column titles
     cols = ["x", "y"]
+    # Creates a pandas DB using the list of tuples
     db = pandas.DataFrame.from_records(arr, columns=cols)
+    # Plots the DB
     db.plot(kind='scatter', x=cols[0], y=cols[1])
+    # Displays the graph
     return plt.show()
 
 

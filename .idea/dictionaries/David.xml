@@ -4,6 +4,9 @@
       <w>looper</w>
       <w>numsum</w>
       <w>onevar</w>
+      <w>xmax</w>
+      <w>xmin</w>
+      <w>xstep</w>
     </words>
   </dictionary>
 </component>
