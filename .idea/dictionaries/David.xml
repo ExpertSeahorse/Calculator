@@ -1,16 +1,22 @@
 <component name="ProjectDictionaryState">
   <dictionary name="David">
     <words>
+      <w>barh</w>
       <w>colspan</w>
       <w>grapher</w>
       <w>looper</w>
       <w>mult</w>
       <w>numsum</w>
       <w>onevar</w>
+      <w>strng</w>
       <w>xmax</w>
       <w>xmin</w>
       <w>xstep</w>
+      <w>xtic</w>
+      <w>xticks</w>
       <w>xvar</w>
+      <w>ystep</w>
+      <w>yticks</w>
       <w>yvar</w>
     </words>
   </dictionary>

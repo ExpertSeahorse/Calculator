@@ -114,7 +114,7 @@ def grapher(db, strng="Not", grid=False, xstep=None, ystep=None):
         # here are the options and pick one
         print("line : line plot (default)          bar : vertical bar plot\n",
               "barh : horizontal bar plot          hist : histogram\n",
-              "box : boxplot                       kde : Kernel Density Estimation plot\n",
+              "box : box plot                       kde : Kernel Density Estimation plot\n",
               "density : same as ‘kde’             area : area plot\n",
               "pie : pie plot                      scatter : scatter plot\n",
               "hexbin : hexbin plot\n\n")
