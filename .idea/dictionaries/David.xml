@@ -3,11 +3,14 @@
     <words>
       <w>grapher</w>
       <w>looper</w>
+      <w>mult</w>
       <w>numsum</w>
       <w>onevar</w>
       <w>xmax</w>
       <w>xmin</w>
       <w>xstep</w>
+      <w>xvar</w>
+      <w>yvar</w>
     </words>
   </dictionary>
 </component>

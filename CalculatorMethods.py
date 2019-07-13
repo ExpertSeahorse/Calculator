@@ -185,29 +185,17 @@ def equation_processor(eq: str, xmin: str, xmax: str, xstep: str):
         str(xstep)
 
     input_group = [eq.lower(), xmin, xmax, xstep]
-    err_code = re.compile(r' \w\(|\)\w|\w[a-z]|[a-z]\d')
+    mult_err_code = re.compile(r' \w\(|\)\w|\w[a-z]|[a-z]\d')
     new_arr = []
     # for each of the passed parameters...
     for entry in input_group:
-        # ***checks if the entry is only 1 character long
-        if not (len(entry) - 1):
-            new_arr.append(entry)
-            continue
-
-        # check through the entire length of the entry...
-        for i in range(len(entry)-1):
-            # if between two characters...
-            eqw = entry[i] + entry[i+1]
-            # there is one of the errors listed in the err_list...
-            if err_code.match(eqw):
-                # Add a multiplication symbol to fix the offence
-                entry = entry[:i+1] + "*" + entry[i+1:]
-
-        # And add the amended entry to this new list
+        # Run through the expression converter
+        expression_converter(entry)
+        # And add the converted expressions to the array
         new_arr.append(entry)
 
     # Convert all parameters to a data type the grapher can use
-    eq = new_arr[0].replace('x', '({x})').replace('t', '({x})').replace('^', '**')
+    eq = new_arr[0].replace('x', '({x})').replace('t', '({x})')
     xmin = float(eval(new_arr[1]))
     xmax = float(eval(new_arr[2]))
     xstep = float(eval(new_arr[3]))
@@ -217,16 +205,46 @@ def equation_processor(eq: str, xmin: str, xmax: str, xstep: str):
     d = abs(xmax / 1000)
     # Generate data points
     for xvar in arange(xmin, xmax, d):
-        # If there is an error when sifting through the coordinate points, return an error
+        # Plug a value for x into the equation
         try:
             yvar = eval(eq.format(x=xvar))
         except TypeError:
+            # If there is an issue from having incorrectly formatted eq (fixed by the expr converter)
             return "No operator between characters"
         except ValueError:
+            # If the xmin or xmax are invalid for a function
             return "Invalid Domain"
         # Add the x and y values to the array's for pandas
         x_arr.append(xvar)
         y_arr.append(yvar)
 
+    # Makes the tic marks on the graph
     xtic = arange(xmin, xmax+xstep, xstep)
+    # Pushes the array of x and y positions into a database and graphs it
     grapher(db=database([x_arr, y_arr]), strng='line', grid=True, xstep=xtic)
+
+
+def expression_converter(expr):
+    """
+    Replaces #(, )#, #x, x#, and ^ with the equivalent in python
+    :param expr:
+    :return:
+    """
+    mult_err_code = re.compile(r' \w\(|\)\w|\w[a-z]|[a-z]\d')
+
+    # if the entry is only 1 character long...
+    if not (len(expr) - 1):
+        # there can't be an error with only one number
+        return expr
+
+    # check through every char in the entry...
+    for i in range(len(expr) - 1):
+        # if between two characters...
+        eqw = expr[i] + expr[i + 1]
+        # there is one of the errors listed in the err_list...
+        if mult_err_code.match(eqw):
+            # Add a multiplication symbol to fix the offence
+            expr = expr[:i + 1] + "*" + expr[i + 1:]
+
+    # And add the fixed entry to this new list and replaces all of the '^'s with '**'s
+    return expr.replace('^', '**')
