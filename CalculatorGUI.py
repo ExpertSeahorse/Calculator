@@ -176,7 +176,7 @@ class TupGraph:
         for i, entry in enumerate(arr):
             newentry = tuple(map(float, entry.strip().split(",")))
             arr[i] = newentry
-        tuplegrapher(arr)
+        tuple_grapher(arr)
 ########################################################################################################################
 
 

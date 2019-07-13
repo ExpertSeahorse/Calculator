@@ -113,7 +113,7 @@ def stats_onevar(arr):
     return avg, numsum, numsum2, sam_std, pop_std, count, minimum, med, maximum
 
 
-def tuplegrapher(arr):
+def tuple_grapher(arr):
     """
     Creates a Pandas Database for use in graphing; accepts only tuples for input
     :param arr:
@@ -139,7 +139,9 @@ def grapher(db, strng="Not", grid=False, xstep=None, ystep=None):
     :param ystep:
     :return:
     """
+    # If no graph was chosen...
     if strng == "Not":
+        # here are the options and pick one
         print("line : line plot (default)          bar : vertical bar plot\n",
               "barh : horizontal bar plot          hist : histogram\n",
               "box : boxplot                       kde : Kernel Density Estimation plot\n",
@@ -149,8 +151,11 @@ def grapher(db, strng="Not", grid=False, xstep=None, ystep=None):
 
         print('What type of graph?')
         strng = input().lower()
+    # Gets the column names from the db
     columns = list(db.columns)
+    # Old plot command
     # db.plot(kind=strng, x='x', y='y', rot=0, grid=grid, xticks=xstep, yticks=ystep)
+    # Plots the DB
     db.plot(kind=strng, x=columns[0], y=columns[1:], rot=0, grid=grid, xticks=xstep, yticks=ystep)
     return plt.show()
 
