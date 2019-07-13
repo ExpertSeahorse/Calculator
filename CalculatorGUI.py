@@ -172,17 +172,26 @@ class ManGraph:
 
 class TupGraph:
     def __init__(self, master):
-        self.input_list = []
+        # Creates the label
         self.label = tk.Label(master, text="Enter the coordinate points: \"###,### ; ###,###\"").pack()
+
+        # Creates the input field
         self.input = tk.Entry(master)
         self.input.bind("<Return>", self.db_converter)
         self.input.pack()
-        self.input_list.append(self.input)
 
     def db_converter(self, event):
-        arr = str(self.input_list[0].get()).strip().split(';')
+        """
+        Digests the input string into a list of tuples for the coordinate points
+        :param event:
+        :return:
+        """
+        # Splits the arr on the semicolon to separate the pairs
+        arr = str(self.input.get()).strip().split(';')
         for i, entry in enumerate(arr):
+            # Splits the pairs into x and y
             new_entry = tuple(map(float, entry.strip().split(",")))
+            # Adds the new pairs back into the array
             arr[i] = new_entry
         tuple_grapher(arr)
 ########################################################################################################################
@@ -204,6 +213,7 @@ class EqGraph:
         # Creates Entry fields and their Labels based on list above
         for a, def_txt, lab_txt, lab_name in entry_list:
             self.lab_name = tk.Label(master, text=lab_txt).grid(row=row)
+
             self.a = tk.Entry(master)
             self.a.bind("<Return>", self.eq_converter)
             self.a.insert(tk.END, def_txt)
@@ -216,13 +226,11 @@ class EqGraph:
 
     def eq_converter(self, event):
         # get input
-        eq = str(self.input_list[0].get())
-        x_min = str(self.input_list[1].get())
-        x_max = str(self.input_list[2].get())
-        x_step = str(self.input_list[3].get())
+        self.inputs = [entry.get() for entry in self.input_list]
+        self.input_list = list(map(str, self.inputs))
 
         # runs the eq graphing func, but if any errors will return into err var
-        err = equation_processor(eq, x_min, x_max, x_step)
+        err = equation_processor(*self.inputs)
         self.res.config(text=err)
 
 

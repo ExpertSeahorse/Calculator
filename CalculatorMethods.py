@@ -160,7 +160,7 @@ def equation_processor(eq: str, xmin: str, xmax: str, xstep: str):
     # for each of the passed parameters...
     for entry in input_group:
         # Run through the expression converter
-        expression_converter(entry)
+        entry = expression_converter(entry)
         # And add the converted expressions to the array
         new_arr.append(entry)
 
