@@ -59,4 +59,3 @@ def database(arr, titles=False):
         cols = range(1, len(arr[0]) + 1)
 
     return pandas.DataFrame(arr, index=indx, columns=cols).T
-
