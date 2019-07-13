@@ -1,6 +1,8 @@
 import tkinter as tk
 from CalculatorMethods import *
 import math
+# ^^^ Don't remove, used in eval() expressions
+from CalculatorMethods import expression_converter
 
 
 class CalcMenu:
@@ -55,14 +57,20 @@ class FiveFunc:
     """
     def __init__(self, master):
         self.title = tk.Label(master, text="Your Expression:").pack()
+
         self.entry = tk.Entry(master)
         self.entry.bind("<Return>", self.evaluate)
         self.entry.pack()
+
         self.res = tk.Label(master)
         self.res.pack()
 
     def evaluate(self, event):
-        self.res.configure(text="Result: " + str(eval(self.entry.get())))
+        """
+        Finds the result of the equation in the entry field and displays it in the res(ult) field
+        :param event:
+        """
+        self.res.configure(text="Result: " + str(eval(expression_converter(self.entry.get()))))
 ########################################################################################################################
 
 
@@ -122,7 +130,7 @@ class ManGraph:
             self.new_list.append(self.ent_name)
             r += 1
 
-        # kde and hexbin dont work because I dont know how to use them
+        # kde and hexbin don't work because I don't know how to use them
         self.options = tk.Label(master, text="line\t: line plot\t\tbar\t: vertical bar plot\n"
                                 "barh\t: horizontal bar plot\thist\t: histogram\n"
                                 "box\t: boxplot\t\t\tkde\t: Kernel Density Estimation plot\n"
@@ -174,8 +182,8 @@ class TupGraph:
     def db_converter(self, event):
         arr = str(self.input_list[0].get()).strip().split(';')
         for i, entry in enumerate(arr):
-            newentry = tuple(map(float, entry.strip().split(",")))
-            arr[i] = newentry
+            new_entry = tuple(map(float, entry.strip().split(",")))
+            arr[i] = new_entry
         tuple_grapher(arr)
 ########################################################################################################################
 
@@ -193,12 +201,12 @@ class EqGraph:
                       ("win_max", "10", "Enter the max x-value", "c"),
                       ("x_step", "1", "Enter the x-step", "d")]
         row = 1
-        # Creates Entry feilds and their Labels based on list above
-        for a, deftxt, labtxt, lab_name in entry_list:
-            self.lab_name = tk.Label(master, text=labtxt).grid(row=row)
+        # Creates Entry fields and their Labels based on list above
+        for a, def_txt, lab_txt, lab_name in entry_list:
+            self.lab_name = tk.Label(master, text=lab_txt).grid(row=row)
             self.a = tk.Entry(master)
             self.a.bind("<Return>", self.eq_converter)
-            self.a.insert(tk.END, deftxt)
+            self.a.insert(tk.END, def_txt)
             self.a.grid(row=row, column=1)
             self.input_list.append(self.a)
             row += 1

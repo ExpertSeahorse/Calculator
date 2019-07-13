@@ -119,7 +119,7 @@ def tup_graph_driver():
         a = tuple(map(float, str_coord_point.strip().split(",")))
         full_arr.append(a)
 
-    tuplegrapher(full_arr)
+    tuple_grapher(full_arr)
 
 
 def stat_driver():

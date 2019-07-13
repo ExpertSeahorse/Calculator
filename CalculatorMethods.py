@@ -1,4 +1,5 @@
-from statistics import *
+from statistics import median, mean, pstdev, stdev
+from NumberValidation import *
 import pandas
 import matplotlib.pyplot as plt
 from math import *
@@ -51,37 +52,6 @@ def trig(num, op):
         return 1 / sin(num)
     elif op == 6:
         return 1 / tan(num)
-
-
-def database(arr, titles=False):
-    """
-    Creates a Pandas Database for use in graphing; akin to the stats button on a TI-84 Calculator
-    :param arr:
-    :param titles:
-    :return:
-    """
-    if not titles:
-        if isinstance(arr[0], list) or isinstance(arr[0], tuple):
-            if len(arr) == 2:
-                indx = ["x", "y"]
-            elif len(arr) == 3:
-                indx = ["x", "y", "z"]
-            else:
-                indx = range(1, len(arr) + 1)
-            cols = range(1, len(arr[0])+1)
-
-        elif isinstance(arr[0], float):
-            indx = ["y"]
-            cols = range(1, len(arr)+1)
-
-        else:
-            indx = range(1, len(arr) + 1)
-            cols = range(1, len(arr[0])+1)
-    else:
-        indx = titles
-        cols = range(1, len(arr[0]) + 1)
-
-    return pandas.DataFrame(arr, index=indx, columns=cols).T
 
 
 def stats_onevar(arr):
@@ -222,29 +192,3 @@ def equation_processor(eq: str, xmin: str, xmax: str, xstep: str):
     xtic = arange(xmin, xmax+xstep, xstep)
     # Pushes the array of x and y positions into a database and graphs it
     grapher(db=database([x_arr, y_arr]), strng='line', grid=True, xstep=xtic)
-
-
-def expression_converter(expr):
-    """
-    Replaces #(, )#, #x, x#, and ^ with the equivalent in python
-    :param expr:
-    :return:
-    """
-    mult_err_code = re.compile(r' \w\(|\)\w|\w[a-z]|[a-z]\d')
-
-    # if the entry is only 1 character long...
-    if not (len(expr) - 1):
-        # there can't be an error with only one number
-        return expr
-
-    # check through every char in the entry...
-    for i in range(len(expr) - 1):
-        # if between two characters...
-        eqw = expr[i] + expr[i + 1]
-        # there is one of the errors listed in the err_list...
-        if mult_err_code.match(eqw):
-            # Add a multiplication symbol to fix the offence
-            expr = expr[:i + 1] + "*" + expr[i + 1:]
-
-    # And add the fixed entry to this new list and replaces all of the '^'s with '**'s
-    return expr.replace('^', '**')
