@@ -85,18 +85,31 @@ def database(arr, titles=False):
 
 
 def stats_onevar(arr):
+    """
+    Run a variety of stats functions on a list of numbers
+    :param arr:
+    :return:
+    """
+    # Takes the average
     avg = mean(arr)
+    # Finds ths sum of all of the numbers
     numsum = sum(arr)
-    numsum2 = 0
-    for entry in arr:
-        numsum2 += entry**2
+    # Finds the sum of all of the numbers squared
+    numsum2 = sum(num**2 for num in arr)
+    # Finds the sample standard deviation
     sam_std = stdev(arr)
+    # Finds the population standard deviation
     pop_std = pstdev(arr)
+    # Finds the number of values
     count = len(arr)
+    # Finds the minimum value
     minimum = min(arr)
+    # Finds the median value
     med = median(arr)
+    # Finds the maximum value
     maximum = max(arr)
 
+    # Returns all of the variables
     return avg, numsum, numsum2, sam_std, pop_std, count, minimum, med, maximum
 
 
