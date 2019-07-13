@@ -1,8 +1,9 @@
 import tkinter as tk
 from CalculatorMethods import *
+from CalculatorMethods import expression_converter
+# noinspection PyUnresolvedReferences
 import math
 # ^^^ Don't remove, used in eval() expressions
-from CalculatorMethods import expression_converter
 
 
 class CalcMenu:
@@ -174,7 +175,6 @@ class ManGraph:
             grd = False
 
         db = database([x_values, y_values], [x_title, y_title])
-        print(db)
         grapher(db=db, xstep=x_step, ystep=y_step, strng=kind, grid=grd)
 ########################################################################################################################
 
@@ -209,7 +209,6 @@ class TupGraph:
 class EqGraph:
     def __init__(self, master):
         # Initializes entry list
-        self.input_list = []
         # Creates Grid and title for window
         self.label = tk.Label(master, text="Equation Graphing")
         self.label.grid(columnspan=2, sticky=tk.N)
@@ -219,6 +218,7 @@ class EqGraph:
                       ("win_max", "10", "Enter the max x-value", "c"),
                       ("x_step", "1", "Enter the x-step", "d")]
         row = 1
+        self.input_list = []
         # Creates Entry fields and their Labels based on list above
         for a, def_txt, lab_txt, lab_name in entry_list:
             self.lab_name = tk.Label(master, text=lab_txt).grid(row=row)
