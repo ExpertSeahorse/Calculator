@@ -1,5 +1,5 @@
 from statistics import median, mean, pstdev, stdev
-from NumberValidation import *
+from NumberTransformation import *
 import pandas
 import matplotlib.pyplot as plt
 from math import *
