@@ -1,5 +1,5 @@
 from CalculatorMethods import *
-from InputMethods import *
+from Packages import *
 # is used when using eval to run equations
 from math import *
 

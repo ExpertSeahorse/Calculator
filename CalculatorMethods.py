@@ -1,9 +1,9 @@
 from statistics import median, mean, pstdev, stdev
-from NumberTransformation import *
+from Packages import *
 import pandas
 import matplotlib.pyplot as plt
 from math import *
-from InputMethods import *
+from Packages import int_input, float_input
 from numpy import arange
 import re
 
