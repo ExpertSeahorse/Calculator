@@ -1,6 +1,6 @@
 import tkinter as tk
-from CalculatorMethods import *
-from CalculatorMethods import expression_converter
+from CalculatorMethods import equation_processor, stats_onevar, tuple_grapher, grapher
+from Packages import database, expression_converter
 # noinspection PyUnresolvedReferences
 import math
 # ^^^ Don't remove, used in eval() expressions
@@ -143,9 +143,9 @@ class ManGraph:
         # kde and hexbin don't work because I don't know how to use them
         self.options = tk.Label(master, text="line\t: line plot\t\tbar\t: vertical bar plot\n"
                                 "barh\t: horizontal bar plot\thist\t: histogram\n"
-                                "box\t: box plot\t\t\tkde\t: Kernel Density Estimation plot\n"
+                                "box\t: box plot\t\t~~kde\t: Kernel Density Estimation plot~~\n"
                                 "area\t: area plot\t\tpie\t: pie plot\n"                      
-                                "scatter\t: scatter plot\t\thexbin\t: hexbin plot", justify=tk.LEFT)
+                                "scatter\t: scatter plot\t\t~~hexbin\t: hexbin plot~~", justify=tk.LEFT)
         self.options.grid(row=r, columnspan=2, rowspan=5)
 
     def db_converter(self, event):

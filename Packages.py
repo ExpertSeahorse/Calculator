@@ -3,7 +3,7 @@ import pandas
 from smtplib import SMTP
 
 
-# Date Implemented into project
+# 07/20/2019
 
 
 def float_input():
